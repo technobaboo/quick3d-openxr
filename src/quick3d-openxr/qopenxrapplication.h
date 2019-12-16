@@ -10,7 +10,7 @@ class OpenXRFrame;
 class QQmlEngine;
 class QQuickItem;
 
-class QOpenXRApplication : public QObject {
+class QUICK3DOPENXR_EXPORT QOpenXRApplication : public QObject {
     Q_OBJECT
 public:
     QOpenXRApplication(QString qmlPath);
