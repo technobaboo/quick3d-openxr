@@ -1,12 +1,11 @@
 #ifndef QOPENXRAPPLICATION_H
 #define QOPENXRAPPLICATION_H
 
+#include <QtQuick3D/private/qquick3dnode_p.h>
+#include <QtQuick3D/private/qquick3dsceneenvironment_p.h>
+
 #include "quick3d-openxr_meta.h"
 
-class OpenGL;
-class OpenXR;
-class OpenXRGraphics;
-class OpenXRFrame;
 class QQmlEngine;
 class QQuickItem;
 
@@ -16,13 +15,17 @@ public:
     QOpenXRApplication(QString qmlPath);
     virtual ~QOpenXRApplication();
 
-
+protected:
     OpenXR *openxr;
     OpenGL *opengl;
     OpenXRGraphics *graphics;
 
     QQmlEngine *mainQmlEngine;
-    QQuickItem *rootObject;
+    QObject *sceneObject;
+    QQuickItem *rootItem;
+
+    QQuick3DNode *sceneRoot;
+    QQuick3DSceneEnvironment *environment;
 };
 
 #endif // QOPENXRAPPLICATION_H

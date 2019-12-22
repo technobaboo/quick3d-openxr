@@ -6,6 +6,7 @@
 #include "openxr_meta.h"
 
 class OpenGL;
+class OpenXRGraphics;
 
 class OpenXR : public QObject {
     Q_OBJECT

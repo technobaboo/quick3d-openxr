@@ -5,6 +5,7 @@
 #include <QOffscreenSurface>
 #include <QtPlatformHeaders/QGLXNativeContext>
 #include <string.h>
+#include <QDebug>
 
 OpenGL::OpenGL(QObject *parent) : QObject(parent) {
     int fbOptions[11] = {GLX_RENDER_TYPE, GLX_RGBA_BIT, GLX_RED_SIZE, 8, GLX_GREEN_SIZE, 8, GLX_BLUE_SIZE, 8, GLX_ALPHA_SIZE, 8, None};
@@ -33,5 +34,7 @@ void OpenGL::initialize() {
 
     //Enable same-thread context checking
     QCoreApplication::setAttribute(Qt::AA_DontCheckOpenGLContextThreadAffinity, false);
+
+    qDebug() << "OpenGL initialized" << endl;
 }
 

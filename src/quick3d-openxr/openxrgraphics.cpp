@@ -41,7 +41,6 @@ void OpenXRGraphics::preInitialize() {
     window->setGeometry(QRect(QPoint(0,0),totalSize)); //Set the window bounds to the minimum to fit both views in case they are asymmetrical
 
     //Make the QML engine and components and so on
-    qmlEngine = new QQmlEngine;
     if (!qmlEngine->incubationController())
         qmlEngine->setIncubationController(window->incubationController());
 
@@ -54,19 +53,6 @@ void OpenXRGraphics::preInitialize() {
 
     leftViewSize = eyeRects[0].size();
     rightViewSize = eyeRects[0].size();
-
-    emit leftEyeSizeChanged();
-    emit rightEyeSizeChanged();
-
-    //Create QML component
-    qmlComponent = new QQmlComponent(qmlEngine, "qrc:/core/StereoRender.qml", QQmlComponent::PreferSynchronous);
-
-    //Load in the QML and add it to the window
-    QObject *rootObject = qmlComponent->create();
-    root = qobject_cast<QQuickItem *>(rootObject);
-    root->setParentItem(window->contentItem());
-    root->setPosition(QPoint(0, 0));
-    root->setSize(totalSize);
 
     quickRenderer->initialize(glContext);
 }

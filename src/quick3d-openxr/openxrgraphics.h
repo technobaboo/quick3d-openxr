@@ -23,16 +23,6 @@ class QOffscreenSurface;
 
 class OpenXRGraphics : public QObject {
     Q_OBJECT
-
-    Q_PROPERTY(OpenXR *openxr MEMBER openxr)
-
-    Q_PROPERTY(QObject *leftEye MEMBER leftEye)
-    Q_PROPERTY(QObject *rightEye MEMBER rightEye)
-
-    Q_PROPERTY(QSize leftViewSize MEMBER leftViewSize NOTIFY leftEyeSizeChanged)
-    Q_PROPERTY(QSize rightViewSize MEMBER rightViewSize NOTIFY rightEyeSizeChanged)
-
-    Q_PROPERTY(QQuickWindow *window READ getWindow NOTIFY windowChanged)
 public:
     explicit OpenXRGraphics(QObject *parent = nullptr);
     ~OpenXRGraphics();
@@ -122,7 +112,6 @@ public:
     QOpenGLContext *glContext;
     QOffscreenSurface *surface;
     QQuickWindow *window;
-    QQuickItem *root;
     QQuickRenderControl *quickRenderer;
     QOpenGLFramebufferObject *glFBO;
 
@@ -140,10 +129,6 @@ public:
     QSize getRightViewSize() const;
 
 signals:
-    void leftEyeSizeChanged();
-    void rightEyeSizeChanged();
-
-    void windowChanged();
     void startFrameLoop();
 };
 

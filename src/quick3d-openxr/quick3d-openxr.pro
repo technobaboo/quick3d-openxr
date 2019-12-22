@@ -12,19 +12,19 @@ LIBS += -lopenxr_loader \
 DEFINES += QUICK3DOPENXR_MODULE
 
 SOURCES += \
-    qopenxrapplication.cpp# \
-#    opengl.cpp \
-#    openxr.cpp \
-#    openxrgraphics.cpp \
-#    openxrframe.cpp
+    qopenxrapplication.cpp \
+    opengl.cpp \
+    openxr.cpp \
+    openxrgraphics.cpp \
+    openxrframe.cpp
 
 HEADERS += \
     opengl_meta.h \
     openxr_meta.h \
-#    opengl.h \
-#    openxr.h \
-#   	openxrgraphics.h \
-#    openxrframe.h \
+    opengl.h \
+    openxr.h \
+    openxrgraphics.h \
+    openxrframe.h \
     qopenxrapplication.h \
     quick3d-openxr_global.h \
     quick3d-openxr_meta.h

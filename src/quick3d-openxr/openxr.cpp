@@ -59,17 +59,17 @@ void OpenXR::initialize() {
     hmdInfo->formFactor = XR_FORM_FACTOR_HEAD_MOUNTED_DISPLAY;
 
     //XrSystemId *hmdID
-    xrGetSystem(*xrInstance, hmdInfo, hmdID);
+    xrResult = xrGetSystem(*xrInstance, hmdInfo, hmdID);
 
-    PFN_xrGetOpenGLGraphicsRequirementsKHR pfnGetOpenGLGraphicsRequirementsKHR = NULL;
+    PFN_xrGetOpenGLGraphicsRequirementsKHR pfnGetOpenGLGraphicsRequirementsKHR = nullptr;
     xrGetInstanceProcAddr(*xrInstance, "xrGetOpenGLGraphicsRequirementsKHR", (PFN_xrVoidFunction *)&pfnGetOpenGLGraphicsRequirementsKHR);
     pfnGetOpenGLGraphicsRequirementsKHR(*xrInstance, *hmdID, &graphicsRequirements);
 
-    //Initialize Vulkan
+    //Initialize OpenGL
     opengl->initialize();
 
-    //Bind vulkan to this OpenXR session
-    //XrGraphicsBindingOpenGLXlibKHR openglBinding
+    //Bind opengl to this OpenXR session
+    XrGraphicsBindingOpenGLXlibKHR OpenGLBinding;
     openglBinding.xDisplay = opengl->display;
     openglBinding.glxContext = opengl->context;
     openglBinding.glxDrawable = opengl->drawable;
@@ -77,15 +77,17 @@ void OpenXR::initialize() {
 
     //XrSessionCreateInfo *xrSessionInfo
     xrSessionInfo->type = XR_TYPE_SESSION_CREATE_INFO;
-    xrSessionInfo->next = const_cast<const XrGraphicsBindingOpenGLXlibKHR*>(&openglBinding);
+    xrSessionInfo->next = const_cast<const XrGraphicsBindingOpenGLXlibKHR*>(&OpenGLBinding);
     xrSessionInfo->systemId = *hmdID;
     xrSessionInfo->createFlags = 0;
 
     //XrSession *stardustSession;
-    xrCreateSession(*xrInstance, xrSessionInfo, stardustSession);
+    xrResult = xrCreateSession(*xrInstance, xrSessionInfo, stardustSession);
 
     //Start the XrSession
-    xrBeginSession(*stardustSession, &beginInfo);
+    xrResult = xrBeginSession(*stardustSession, &beginInfo);
+
+    qDebug() << "Initialized OpenXR" << endl;
 }
 
 bool OpenXR::isExtensionSupported(char *extensionName, XrExtensionProperties *instanceExtensionProperties, uint32_t instanceExtensionCount) {
