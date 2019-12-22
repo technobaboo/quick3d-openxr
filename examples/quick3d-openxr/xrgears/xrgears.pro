@@ -6,7 +6,7 @@ INSTALLS += target
 SOURCES += \
     main.cpp
 
-#RESOURCES += \
-#    resources.qrc
+RESOURCES += \
+    resources.qrc
 
 #Inspired by Collabora's XRGears demo (https://gitlab.freedesktop.org/monado/demos/xrgears)
