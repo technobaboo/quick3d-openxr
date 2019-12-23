@@ -63,13 +63,7 @@ void OpenXRFrame::startFrame() {
         //Get the current view (makes code neater)
         XrView &view = graphics->views[i];
 
-        //Get the current eye camera (makes code neater)
-        QQuick3DFrustumCamera *eye = qobject_cast<QQuick3DFrustumCamera *>(graphics->leftEye);
-        if(i==1)
-            eye = qobject_cast<QQuick3DFrustumCamera *>(graphics->rightEye);
-
-        if(!eye)
-            break;
+        QQuick3DFrustumCamera *camera = graphics->cameras[i];
 
         //Set the cameras' positon to the pose position
         QVector3D position = QVector3D(
@@ -77,7 +71,7 @@ void OpenXRFrame::startFrame() {
             -view.pose.position.y,
             -view.pose.position.z
         );
-        eye->setPosition(position);
+        camera->setPosition(position);
 
         //Set the cameras' orientation to match the orientation
         QQuaternion rotation = QQuaternion(
@@ -88,7 +82,7 @@ void OpenXRFrame::startFrame() {
         );
         QVector3D euler = rotation.toEulerAngles();
 
-        eye->setRotation(QVector3D(
+        camera->setRotation(QVector3D(
             euler.x(),
             -euler.y(),
             -euler.z()
@@ -97,10 +91,10 @@ void OpenXRFrame::startFrame() {
 //        eye->setIsFieldOfViewHorizontal(true);
 //        eye->setFieldOfView((view.fov.angleRight-view.fov.angleLeft)*RAD2DEG);
 
-        eye->setTop      (std::sin(view.fov.angleUp)*eye->clipNear());
-        eye->setBottom   (std::sin(view.fov.angleDown)*eye->clipNear());
-        eye->setLeft     (std::sin(view.fov.angleLeft)*eye->clipNear());
-        eye->setRight    (std::sin(view.fov.angleRight)*eye->clipNear());
+        camera->setTop      (std::sin(view.fov.angleUp)*camera->clipNear());
+        camera->setBottom   (std::sin(view.fov.angleDown)*camera->clipNear());
+        camera->setLeft     (std::sin(view.fov.angleLeft)*camera->clipNear());
+        camera->setRight    (std::sin(view.fov.angleRight)*camera->clipNear());
 
         //Update properties on the XrFrameEndInfo and its dependencies
         graphics->stardustLayerViews[i].fov = view.fov;
@@ -126,7 +120,7 @@ void OpenXRFrame::renderFrame() {
     graphics->quickRenderer->sync();
     graphics->quickRenderer->render();
 
-//    graphics->glFBO->toImage().save("out.png", 0, 10);
+//    graphics->glFBO->toImage().save(QLatin1String("/tmp/quick3d-openxr_preview.png"), nullptr, 10);
 
     (reinterpret_cast<PFNGLBINDFRAMEBUFFEREXTPROC>(graphics->glContext->getProcAddress("glBindFramebufferEXT")))(
         GL_FRAMEBUFFER_EXT, graphics->glFBO->handle()
@@ -140,7 +134,7 @@ void OpenXRFrame::renderFrame() {
         GL_FRAMEBUFFER_EXT,
         GL_COLOR_ATTACHMENT0_EXT,
         GL_TEXTURE_2D,
-        colorTex,
+        graphics->openglImages[0][0],
         0
     );
 

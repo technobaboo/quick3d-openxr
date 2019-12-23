@@ -69,7 +69,6 @@ void OpenXR::initialize() {
     opengl->initialize();
 
     //Bind opengl to this OpenXR session
-    XrGraphicsBindingOpenGLXlibKHR OpenGLBinding;
     openglBinding.xDisplay = opengl->display;
     openglBinding.glxContext = opengl->context;
     openglBinding.glxDrawable = opengl->drawable;
@@ -77,7 +76,7 @@ void OpenXR::initialize() {
 
     //XrSessionCreateInfo *xrSessionInfo
     xrSessionInfo->type = XR_TYPE_SESSION_CREATE_INFO;
-    xrSessionInfo->next = const_cast<const XrGraphicsBindingOpenGLXlibKHR*>(&OpenGLBinding);
+    xrSessionInfo->next = const_cast<const XrGraphicsBindingOpenGLXlibKHR*>(&openglBinding);
     xrSessionInfo->systemId = *hmdID;
     xrSessionInfo->createFlags = 0;
 

@@ -6,6 +6,7 @@
 #include <QRect>
 
 #include "openxr_meta.h"
+#include <QtQuick3D/private/qquick3dfrustumcamera_p.h>
 
 class OpenXR;
 class OpenXRFrame;
@@ -100,8 +101,7 @@ public:
 
     std::vector<XrView> views;
 
-    QObject *leftEye;
-    QObject *rightEye;
+    std::vector<QQuick3DFrustumCamera *> cameras;
 
     QSize leftViewSize;
     QSize rightViewSize;
@@ -122,11 +122,6 @@ public:
 
     XrFrameWaitInfo frameWaitInfo{XR_TYPE_FRAME_WAIT_INFO};
     XrFrameState frameState{XR_TYPE_FRAME_STATE};
-
-    QQuickWindow *getWindow() const;
-
-    QSize getLeftViewSize() const;
-    QSize getRightViewSize() const;
 
 signals:
     void startFrameLoop();

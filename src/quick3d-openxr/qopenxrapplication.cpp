@@ -47,7 +47,8 @@ QOpenXRApplication::QOpenXRApplication(QString qmlPath) : QObject(nullptr) {
     //Create the base node for the entire QtQuick3D scenegraph and add the QML component contents in
     sceneRoot = new QQuick3DNode();
     sceneRoot->setParent(graphics->window->contentItem());
-    scene3DObject->setParentItem(sceneRoot);
+    if(scene3DObject != nullptr)
+        scene3DObject->setParentItem(sceneRoot);
 
     //Add in the cameras for the scenegraph
     QQuick3DFrustumCamera *leftCamera  = new QQuick3DFrustumCamera();
@@ -62,6 +63,9 @@ QOpenXRApplication::QOpenXRApplication(QString qmlPath) : QObject(nullptr) {
 
     leftView ->setImportScene(sceneRoot);
     rightView->setImportScene(sceneRoot);
+
+    //Link the cameras to the graphics
+    graphics->cameras = {leftCamera, rightCamera};
 
     //Add QML access to this instance
 //    qmlRegisterSingletonType<QOpenXRApplication *>("QtQuick3D", 1, 0, "OpenXR", [this](QQmlEngine *engine, QJSEngine *scriptEngine) -> QObject * {

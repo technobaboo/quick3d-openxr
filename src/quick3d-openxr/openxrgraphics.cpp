@@ -35,7 +35,7 @@ void OpenXRGraphics::preInitialize() {
     //Create QQuickRenderControl for both eyes
     quickRenderer = new QQuickRenderControl(this);
     window = new QQuickWindow(quickRenderer);
-    window->setColor(Qt::transparent);
+    window->setColor(Qt::red);
 
 
     window->setGeometry(QRect(QPoint(0,0),totalSize)); //Set the window bounds to the minimum to fit both views in case they are asymmetrical
@@ -82,8 +82,8 @@ void OpenXRGraphics::initialize() {
             );
 
     //Update the swapchain info's values
-    swapInfo.width = eyeRects[0].width();
-    swapInfo.height = eyeRects[0].height();
+    swapInfo.width = totalSize.width();//eyeRects[0].width();
+    swapInfo.height = totalSize.height();//eyeRects[0].height();
     swapInfo.sampleCount = eyeData[0].recommendedSwapchainSampleCount;
 
     //Do all this for both eyes
@@ -99,6 +99,8 @@ void OpenXRGraphics::initialize() {
 
         // Resize the swapchain-length for current eye i
         swapchainImages[i].resize(swapchainLength);
+        for (uint32_t j = 0; j < swapchainLength; j++)
+            swapchainImages[i][j].type = XR_TYPE_SWAPCHAIN_IMAGE_OPENGL_KHR;
         xrEnumerateSwapchainImages(swapchains[i], swapchainLength, &swapchainLength, reinterpret_cast<XrSwapchainImageBaseHeader*>(swapchainImages[i].data()));
 
         openglImages[i].resize(swapchainImages[i].size());
@@ -126,18 +128,3 @@ void OpenXRGraphics::initialize() {
     connect(this, &OpenXRGraphics::startFrameLoop, frame, &OpenXRFrame::initialize);
     emit startFrameLoop();
 }
-
-QSize OpenXRGraphics::getRightViewSize() const
-{
-    return rightViewSize;
-}
-
-QSize OpenXRGraphics::getLeftViewSize() const
-{
-    return leftViewSize;
-}
-
-QQuickWindow *OpenXRGraphics::getWindow() const {
-    return window;
-}
-
