@@ -15,14 +15,12 @@ OpenXRGraphics::~OpenXRGraphics() {
     xrDestroySwapchain(swapchains[1]);
 }
 
-void OpenXRGraphics::preInitialize() {
+void OpenXRGraphics::setupQtRendering() {
     //Set the OpenGL version
     glFormat = new QSurfaceFormat;
     glFormat->setProfile(QSurfaceFormat::CoreProfile);
     glFormat->setRenderableType(QSurfaceFormat::OpenGL);
     glFormat->setMajorVersion(3);
-
-    QSurfaceFormat::setDefaultFormat(*glFormat);
 
     //Create the OpenGL view rendering
     glContext = new QOpenGLContext(this);
@@ -30,34 +28,16 @@ void OpenXRGraphics::preInitialize() {
 
     //Create the offscreen surface
     surface = new QOffscreenSurface;
+    surface->setFormat(*glFormat);
     surface->create();
 
     //Create QQuickRenderControl for both eyes
     quickRenderer = new QQuickRenderControl(this);
     window = new QQuickWindow(quickRenderer);
-    window->setColor(Qt::red);
-
-
-    window->setGeometry(QRect(QPoint(0,0),totalSize)); //Set the window bounds to the minimum to fit both views in case they are asymmetrical
-
-    //Make the QML engine and components and so on
-    if (!qmlEngine->incubationController())
-        qmlEngine->setIncubationController(window->incubationController());
-
-    //Make the context current
-    bool isCurrent = glContext->makeCurrent(surface);
-
-    //Create and link the FBO
-    glFBO = new QOpenGLFramebufferObject(totalSize, QOpenGLFramebufferObject::NoAttachment, GL_TEXTURE_2D, GL_RGBA8);
-    window->setRenderTarget(glFBO);
-
-    leftViewSize = eyeRects[0].size();
-    rightViewSize = eyeRects[0].size();
-
-    quickRenderer->initialize(glContext);
+    window->setColor(Qt::transparent);
 }
 
-void OpenXRGraphics::initialize() {
+void OpenXRGraphics::getViewSizes() {
     //Get the stereo views' configuration properties
     xrGetViewConfigurationProperties(*openxr->xrInstance, *openxr->hmdID, openxr->viewConfig, &viewProperties);
 
@@ -76,10 +56,25 @@ void OpenXRGraphics::initialize() {
         eyeRects[i].setWidth(eyeData[i].recommendedImageRectWidth + (eyeData[i].recommendedImageRectHeight % 2));
     }
 
+    leftViewSize = eyeRects[0].size();
+    rightViewSize = eyeRects[1].size();
+
     totalSize = QSize(
                 eyeRects[0].width()+eyeRects[1].width(),
                 std::max(eyeRects[0].height(), eyeRects[1].height())
             );
+}
+
+void OpenXRGraphics::initialize() {
+    //Make the context current
+    bool isCurrent = glContext->makeCurrent(surface);
+
+    //Create and link the FBO
+    glFBO = new QOpenGLFramebufferObject(totalSize, QOpenGLFramebufferObject::NoAttachment, GL_TEXTURE_2D, GL_RGBA8);
+    window->setRenderTarget(glFBO);
+
+    //Start the Qt quick renderer
+    quickRenderer->initialize(glContext);
 
     //Update the swapchain info's values
     swapInfo.width = totalSize.width();//eyeRects[0].width();
@@ -113,6 +108,13 @@ void OpenXRGraphics::initialize() {
 
     //Initialize views vector
     views = std::vector<XrView>(2, XrView {XR_TYPE_VIEW, nullptr});
+
+    //Finish setup of the Qt graphics
+    window->setGeometry(QRect(QPoint(0,0),totalSize)); //Set the window bounds to the minimum to fit both views in case they are asymmetrical
+
+    //Make the QML engine and components and so on
+    if (!qmlEngine->incubationController())
+        qmlEngine->setIncubationController(window->incubationController());
 
     //Create OpenXRFrame object and add it to the thread
     frame = new OpenXRFrame(nullptr);

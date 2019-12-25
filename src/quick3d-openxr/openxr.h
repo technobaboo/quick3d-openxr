@@ -16,7 +16,15 @@ public:
     ~OpenXR();
 
     OpenGL *opengl = nullptr;
-    Q_INVOKABLE void initialize();
+
+    void setupInfo();
+    void loadExtensions();
+    void createInstance();
+    void loadSystem();
+    XrGraphicsRequirementsOpenGLKHR graphicsRequirements();
+    void setupGraphics();
+    void createSession();
+    void startSession();
 
     XrApplicationInfo *xrAppInfo = new XrApplicationInfo;
     XrInstanceCreateInfo *xrInstanceInfo = new XrInstanceCreateInfo;
@@ -25,8 +33,6 @@ public:
     XrSystemId *hmdID = new XrSystemId;
     XrSessionCreateInfo *xrSessionInfo = new XrSessionCreateInfo;
     XrSession *stardustSession = new XrSession;
-
-    XrGraphicsRequirementsOpenGLKHR graphicsRequirements{XR_TYPE_GRAPHICS_REQUIREMENTS_OPENGL_KHR};
 
     std::vector<char> *openglExtensionBuffer = new std::vector<char>;
 
@@ -40,10 +46,8 @@ public:
                 nullptr,
                 viewConfig
     };
-
 signals:
     void ready();
-
 private:
     bool isExtensionSupported(char* extensionName, XrExtensionProperties* instanceExtensionProperties, uint32_t instanceExtensionCount);
 };

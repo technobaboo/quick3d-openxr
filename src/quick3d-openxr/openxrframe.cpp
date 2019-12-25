@@ -60,16 +60,16 @@ void OpenXRFrame::startFrame() {
         //Wait for when the swapchain images are ready to be written
         xrWaitSwapchainImage(graphics->swapchains[i], &waitInfo);
 
-        //Get the current view (makes code neater)
+        //Get the current view (makes code neater)red
         XrView &view = graphics->views[i];
 
         QQuick3DFrustumCamera *camera = graphics->cameras[i];
 
         //Set the cameras' positon to the pose position
         QVector3D position = QVector3D(
-            -view.pose.position.x,
+            view.pose.position.x,
             -view.pose.position.y,
-            -view.pose.position.z
+            view.pose.position.z
         );
         camera->setPosition(position);
 
@@ -84,8 +84,8 @@ void OpenXRFrame::startFrame() {
 
         camera->setRotation(QVector3D(
             euler.x(),
-            -euler.y(),
-            -euler.z()
+            euler.y(),
+            euler.z()
         ));
 
 //        eye->setIsFieldOfViewHorizontal(true);
@@ -120,29 +120,41 @@ void OpenXRFrame::renderFrame() {
     graphics->quickRenderer->sync();
     graphics->quickRenderer->render();
 
-//    graphics->glFBO->toImage().save(QLatin1String("/tmp/quick3d-openxr_preview.png"), nullptr, 10);
-
     (reinterpret_cast<PFNGLBINDFRAMEBUFFEREXTPROC>(graphics->glContext->getProcAddress("glBindFramebufferEXT")))(
         GL_FRAMEBUFFER_EXT, graphics->glFBO->handle()
     );
 
-    (reinterpret_cast<PFNGLCLIPCONTROLPROC>(graphics->glContext->getProcAddress("glClipControl")))(
-        GL_UPPER_LEFT, GL_ZERO_TO_ONE
-    );
+//    glClearColor(0, 1, 1, 1);
+//    glClear(GL_COLOR_BUFFER_BIT);
 
-    (reinterpret_cast<PFNGLFRAMEBUFFERTEXTURE2DEXTPROC>(graphics->glContext->getProcAddress("glFramebufferTexture2DEXT")))(
-        GL_FRAMEBUFFER_EXT,
-        GL_COLOR_ATTACHMENT0_EXT,
-        GL_TEXTURE_2D,
-        graphics->openglImages[0][0],
-        0
-    );
+//    (reinterpret_cast<PFNGLCLIPCONTROLPROC>(graphics->glContext->getProcAddress("glClipControl")))(
+//        GL_UPPER_LEFT, GL_ZERO_TO_ONE
+//    );
 
-    glFinish();
+//    (reinterpret_cast<PFNGLFRAMEBUFFERTEXTURE2DEXTPROC>(graphics->glContext->getProcAddress("glFramebufferTexture2DEXT")))(
+//        GL_FRAMEBUFFER_EXT,
+//        GL_COLOR_ATTACHMENT0_EXT,
+//        GL_TEXTURE_2D,
+//        graphics->swapchainImages[0][0].image,
+//        0
+//    );
+//    (reinterpret_cast<PFNGLFRAMEBUFFERTEXTURE2DEXTPROC>(graphics->glContext->getProcAddress("glFramebufferTexture2DEXT")))(
+//        GL_FRAMEBUFFER_EXT,
+//        GL_COLOR_ATTACHMENT0_EXT,
+//        GL_TEXTURE_2D,
+//        graphics->swapchainImages[1][0].image,
+//        0
+//    );
+
+    glFlush();
+
+    bool fboValid = graphics->glFBO->isValid();
+    QImage debugImage = graphics->glFBO->toImage();
+    debugImage.save(QLatin1String("/tmp/quick3d-openxr_preview.png"), nullptr, 10);
 
 //    copyFrame(0);
 //    copyFrame(1);
-}
+ }
 
 void OpenXRFrame::endFrame() {
 //    qDebug() << "Ending frame";

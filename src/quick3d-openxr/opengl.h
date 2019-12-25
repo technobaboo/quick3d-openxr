@@ -14,18 +14,18 @@ class OpenGL : public QObject
 public:
     explicit OpenGL(QObject *parent = nullptr);
 
-    Q_INVOKABLE void initialize();
-
-    Display *display;
-
-    GLXContext context;
-    GLXDrawable drawable;
-    GLXFBConfig *framebufferConfig;
-
-    int framebufferOptions[11];
+    void initialize();
+    Display *display();
+    GLXContext context();
+    GLXDrawable drawable();
+    GLXFBConfig *framebufferConfig();
 
     OpenXR *openxr;
     OpenXRGraphics *graphics;
+
+protected:
+    QVariant nativeGLHandle;
+    int framebufferOptions[11];
 };
 
 

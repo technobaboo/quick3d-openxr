@@ -29,8 +29,9 @@ public:
     ~OpenXRGraphics();
 
     OpenXR *openxr = nullptr;
-    Q_INVOKABLE void preInitialize();
-    Q_INVOKABLE void initialize();
+    void setupQtRendering();
+    void getViewSizes();
+    void initialize();
 
     uint displayFPS = 0;
 

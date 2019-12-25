@@ -1,4 +1,5 @@
 #include <QQmlEngine>
+#include <QQmlError>
 #include <QQuickItem>
 #include "qopenxrapplication.h"
 
@@ -7,7 +8,7 @@
 
 #include <QDebug>
 
-QOpenXRApplication::QOpenXRApplication(QString qmlPath) : QObject(nullptr) {
+QOpenXRApplication::QOpenXRApplication(QUrl qmlPath) : QObject(nullptr) {
     qDebug() << "Creating new OpenXR session" << endl;
 
     //Create QML engine
@@ -15,6 +16,9 @@ QOpenXRApplication::QOpenXRApplication(QString qmlPath) : QObject(nullptr) {
 
     //Create QML component for the scene and instantiate an instance
     QQmlComponent *sceneComponent = new QQmlComponent(mainQmlEngine, qmlPath, QQmlComponent::PreferSynchronous);
+    if(sceneComponent->isError()) {
+        qDebug() << "QML errors:" << sceneComponent->errors() << endl;
+    }
     sceneObject = sceneComponent->create();
     QQuick3DObject *scene3DObject = qobject_cast<QQuick3DObject *>(sceneObject);
 
@@ -30,8 +34,19 @@ QOpenXRApplication::QOpenXRApplication(QString qmlPath) : QObject(nullptr) {
     graphics->openxr = openxr;
     graphics->qmlEngine = mainQmlEngine;
 
+    //Set up OpenXR
+    openxr->setupInfo();
+    openxr->loadExtensions();
+    openxr->createInstance();
+    openxr->loadSystem();
+    graphics->setupQtRendering();
+    opengl->initialize();
+    openxr->setupGraphics();
+    openxr->createSession();
+    openxr->startSession();
+    graphics->getViewSizes();
+
     //Set up the window
-    graphics->preInitialize();
     QQuick3DViewport *leftView  = new QQuick3DViewport(graphics->window->contentItem());
     QQuick3DViewport *rightView = new QQuick3DViewport(graphics->window->contentItem());
 
@@ -75,10 +90,14 @@ QOpenXRApplication::QOpenXRApplication(QString qmlPath) : QObject(nullptr) {
 //        return this;
 //    });
 
-    openxr->initialize();
     graphics->initialize();
 }
 
 QOpenXRApplication::~QOpenXRApplication() {
 
 }
+
+//void QOpenXRApplication::setSceneRoot(QQuick3DObject root) {
+//    sceneRoot = root;
+//    root.setParentItem()
+//}

@@ -12,8 +12,10 @@ class QQuickItem;
 class QUICK3DOPENXR_EXPORT QOpenXRApplication : public QObject {
     Q_OBJECT
 public:
-    QOpenXRApplication(QString qmlPath);
+    QOpenXRApplication(QUrl qmlPath);
     virtual ~QOpenXRApplication();
+
+//    void setSceneRoot(QQuick3DObject *root);
 
 protected:
     OpenXR *openxr;
