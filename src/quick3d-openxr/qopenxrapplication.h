@@ -12,7 +12,7 @@ class QQuickItem;
 class QUICK3DOPENXR_EXPORT QOpenXRApplication : public QObject {
     Q_OBJECT
 public:
-    QOpenXRApplication(QUrl qmlPath);
+    QOpenXRApplication(QQmlEngine *mainQmlEngine, QQmlComponent *sceneComponent);
     virtual ~QOpenXRApplication();
 
 //    void setSceneRoot(QQuick3DObject *root);
@@ -22,7 +22,7 @@ protected:
     OpenGL *opengl;
     OpenXRGraphics *graphics;
 
-    QQmlEngine *mainQmlEngine;
+//    QQmlEngine *mainQmlEngine;
     QObject *sceneObject;
     QQuickItem *rootItem;
 

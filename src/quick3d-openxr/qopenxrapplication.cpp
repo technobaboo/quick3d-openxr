@@ -8,17 +8,10 @@
 
 #include <QDebug>
 
-QOpenXRApplication::QOpenXRApplication(QUrl qmlPath) : QObject(nullptr) {
+QOpenXRApplication::QOpenXRApplication(QQmlEngine *mainQmlEngine, QQmlComponent *sceneComponent) : QObject(nullptr) {
     qDebug() << "Creating new OpenXR session" << endl;
 
-    //Create QML engine
-    mainQmlEngine = new QQmlEngine();
-
     //Create QML component for the scene and instantiate an instance
-    QQmlComponent *sceneComponent = new QQmlComponent(mainQmlEngine, qmlPath, QQmlComponent::PreferSynchronous);
-    if(sceneComponent->isError()) {
-        qDebug() << "QML errors:" << sceneComponent->errors() << endl;
-    }
     sceneObject = sceneComponent->create();
     QQuick3DObject *scene3DObject = qobject_cast<QQuick3DObject *>(sceneObject);
 
