@@ -1,4 +1,5 @@
-import QtQuick3D 1.0
+import QtQuick3D 1.14
+import QtQuick3D.Materials 1.14
 
 Node {
     id: scene
@@ -16,4 +17,14 @@ Node {
 //    Model {
 //        source: "BlueGear.mesh"
 //    }
+
+    Model {
+        source: "qrc:/RedGear.mesh"
+        materials: PrincipledMaterial {
+            lighting: PrincipledMaterial.NoLighting
+            emissiveColor: "#ffffff"
+        }
+
+//        position: Qt.vector3d(0, 100, 1.65)
+    }
 }

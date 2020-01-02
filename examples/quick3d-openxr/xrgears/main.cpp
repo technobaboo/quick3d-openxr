@@ -8,7 +8,7 @@ int main(int argc, char *argv[]) {
 
     //Create QML engine
     QQmlEngine *mainQmlEngine = new QQmlEngine();
-    QQmlComponent *sceneComponent = new QQmlComponent(mainQmlEngine, "qrc:/xrgears.qml", QQmlComponent::PreferSynchronous);
+    QQmlComponent *sceneComponent = new QQmlComponent(mainQmlEngine, QUrl("qrc:/xrgears.qml"), QQmlComponent::PreferSynchronous);
     if(sceneComponent->isError()) {
         qDebug() << "QML errors:" << sceneComponent->errors() << endl;
     }
