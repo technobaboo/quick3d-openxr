@@ -116,20 +116,17 @@ void OpenXRFrame::startFrame() {
 void OpenXRFrame::renderFrame() {
 //    qDebug() << "Rendering frame";
 
-    graphics->quickRenderer->polishItems();
-    graphics->quickRenderer->sync();
-    graphics->quickRenderer->render();
-
     (reinterpret_cast<PFNGLBINDFRAMEBUFFEREXTPROC>(graphics->glContext->getProcAddress("glBindFramebufferEXT")))(
         GL_FRAMEBUFFER_EXT, graphics->glFBO->handle()
     );
 
-//    glClearColor(0, 1, 1, 1);
-//    glClear(GL_COLOR_BUFFER_BIT);
+    glClearColor(0, 1, 1, 1);
+    glClear(GL_COLOR_BUFFER_BIT);
 
 //    (reinterpret_cast<PFNGLCLIPCONTROLPROC>(graphics->glContext->getProcAddress("glClipControl")))(
 //        GL_UPPER_LEFT, GL_ZERO_TO_ONE
 //    );
+
 
 //    (reinterpret_cast<PFNGLFRAMEBUFFERTEXTURE2DEXTPROC>(graphics->glContext->getProcAddress("glFramebufferTexture2DEXT")))(
 //        GL_FRAMEBUFFER_EXT,
@@ -138,9 +135,10 @@ void OpenXRFrame::renderFrame() {
 //        graphics->swapchainImages[0][0].image,
 //        0
 //    );
+
 //    (reinterpret_cast<PFNGLFRAMEBUFFERTEXTURE2DEXTPROC>(graphics->glContext->getProcAddress("glFramebufferTexture2DEXT")))(
 //        GL_FRAMEBUFFER_EXT,
-//        GL_COLOR_ATTACHMENT0_EXT,
+//        GL_COLOR_ATTACHMENT1_EXT,
 //        GL_TEXTURE_2D,
 //        graphics->swapchainImages[1][0].image,
 //        0
@@ -148,12 +146,13 @@ void OpenXRFrame::renderFrame() {
 
     glFlush();
 
+//    graphics->quickRenderer->polishItems();
+//    graphics->quickRenderer->sync();
+//    graphics->quickRenderer->render();
+
     bool fboValid = graphics->glFBO->isValid();
     QImage debugImage = graphics->glFBO->toImage();
     debugImage.save(QLatin1String("/tmp/quick3d-openxr_preview.png"), nullptr, 10);
-
-//    copyFrame(0);
-//    copyFrame(1);
  }
 
 void OpenXRFrame::endFrame() {
