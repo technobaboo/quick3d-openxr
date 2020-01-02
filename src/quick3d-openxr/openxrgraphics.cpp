@@ -77,8 +77,8 @@ void OpenXRGraphics::initialize() {
     quickRenderer->initialize(glContext);
 
     //Update the swapchain info's values
-    swapInfo.width = totalSize.width();//eyeRects[0].width();
-    swapInfo.height = totalSize.height();//eyeRects[0].height();
+    swapInfo.width = eyeRects[0].width();
+    swapInfo.height = eyeRects[0].height();
     swapInfo.sampleCount = eyeData[0].recommendedSwapchainSampleCount;
 
     //Do all this for both eyes

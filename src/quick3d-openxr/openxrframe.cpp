@@ -120,35 +120,40 @@ void OpenXRFrame::renderFrame() {
         GL_FRAMEBUFFER_EXT, graphics->glFBO->handle()
     );
 
-    glClearColor(0, 1, 1, 1);
-    glClear(GL_COLOR_BUFFER_BIT);
+    //    glClearColor(0, 1, 1, 1);
+    //    glClear(GL_COLOR_BUFFER_BIT);
+
 
 //    (reinterpret_cast<PFNGLCLIPCONTROLPROC>(graphics->glContext->getProcAddress("glClipControl")))(
 //        GL_UPPER_LEFT, GL_ZERO_TO_ONE
 //    );
 
 
-//    (reinterpret_cast<PFNGLFRAMEBUFFERTEXTURE2DEXTPROC>(graphics->glContext->getProcAddress("glFramebufferTexture2DEXT")))(
-//        GL_FRAMEBUFFER_EXT,
-//        GL_COLOR_ATTACHMENT0_EXT,
-//        GL_TEXTURE_2D,
-//        graphics->swapchainImages[0][0].image,
-//        0
-//    );
-
-//    (reinterpret_cast<PFNGLFRAMEBUFFERTEXTURE2DEXTPROC>(graphics->glContext->getProcAddress("glFramebufferTexture2DEXT")))(
-//        GL_FRAMEBUFFER_EXT,
-//        GL_COLOR_ATTACHMENT1_EXT,
-//        GL_TEXTURE_2D,
-//        graphics->swapchainImages[1][0].image,
-//        0
-//    );
+    glViewport(0, 0, graphics->eyeRects[0].width(), graphics->eyeRects[0].height());
+    (reinterpret_cast<PFNGLFRAMEBUFFERTEXTURE2DEXTPROC>(graphics->glContext->getProcAddress("glFramebufferTexture2DEXT")))(
+        GL_FRAMEBUFFER_EXT,
+        GL_COLOR_ATTACHMENT0_EXT,
+        GL_TEXTURE_2D,
+        graphics->swapchainImages[0][0].image,
+        0
+    );
 
     glFlush();
 
-//    graphics->quickRenderer->polishItems();
-//    graphics->quickRenderer->sync();
-//    graphics->quickRenderer->render();
+    graphics->quickRenderer->polishItems();
+    graphics->quickRenderer->sync();
+    graphics->quickRenderer->render();
+
+    glViewport(graphics->eyeRects[0].width(), 0, graphics->eyeRects[1].width(), graphics->eyeRects[1].height());
+    (reinterpret_cast<PFNGLFRAMEBUFFERTEXTURE2DEXTPROC>(graphics->glContext->getProcAddress("glFramebufferTexture2DEXT")))(
+        GL_FRAMEBUFFER_EXT,
+        GL_COLOR_ATTACHMENT1_EXT,
+        GL_TEXTURE_2D,
+        graphics->swapchainImages[1][0].image,
+        0
+    );
+
+    glFlush();
 
     bool fboValid = graphics->glFBO->isValid();
     QImage debugImage = graphics->glFBO->toImage();
