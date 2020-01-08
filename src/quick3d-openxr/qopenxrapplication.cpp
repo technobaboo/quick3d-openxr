@@ -75,11 +75,11 @@ QOpenXRApplication::QOpenXRApplication(QQmlEngine *mainQmlEngine, QQmlComponent 
     graphics->cameras = {leftCamera, rightCamera};
 
     //Add QML access to this instance
-    qmlRegisterSingletonType<QOpenXRApplication *>("QtQuick3D", 1, 0, "OpenXR", [](QQmlEngine *engine, QJSEngine *scriptEngine) -> QObject * {
+    qmlRegisterSingletonType<QOpenXRApplication *>("QtQuick3D", 1, 0, "OpenXR", [this](QQmlEngine *engine, QJSEngine *scriptEngine) -> QObject * {
         Q_UNUSED(engine)
         Q_UNUSED(scriptEngine)
 
-        return QOpenXRApplication::mainApp;
+        return this;
     });
 
     graphics->initialize();
