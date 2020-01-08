@@ -1,6 +1,7 @@
 #ifndef QOPENXRAPPLICATION_H
 #define QOPENXRAPPLICATION_H
 
+#include <QObject>
 #include <QtQuick3D/private/qquick3dnode_p.h>
 #include <QtQuick3D/private/qquick3dsceneenvironment_p.h>
 #include <QtQuick3D/private/qquick3dviewport_p.h>
