@@ -16,8 +16,6 @@ public:
     QOpenXRApplication(QQmlEngine *mainQmlEngine, QQmlComponent *sceneComponent);
     virtual ~QOpenXRApplication();
 
-    static QOpenXRApplication *mainApp;
-
     Q_INVOKABLE void setEnvironment(QQuick3DSceneEnvironment *environment);
 //    void setSceneRoot(QQuick3DObject *root);
 
