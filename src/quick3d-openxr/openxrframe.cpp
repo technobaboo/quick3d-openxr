@@ -17,7 +17,27 @@ OpenXRFrame::OpenXRFrame(QObject *parent) : QObject(parent) {
 void OpenXRFrame::initialize() {
     bool isCurrent = graphics->glContext->makeCurrent(graphics->surface);
 
-//    createEXTBuffers();
+    (reinterpret_cast<PFNGLBINDFRAMEBUFFEREXTPROC>(graphics->glContext->getProcAddress("glBindFramebufferEXT")))(
+        GL_FRAMEBUFFER, graphics->glFBO->handle()
+    );
+    (reinterpret_cast<PFNGLGENRENDERBUFFERSPROC>(graphics->glContext->getProcAddress("glGenRenderbuffers")))(
+        1, &renderbuffer
+    );
+    (reinterpret_cast<PFNGLBINDRENDERBUFFERPROC>(graphics->glContext->getProcAddress("glBindRenderbuffer")))(
+        GL_RENDERBUFFER, renderbuffer
+    );
+    (reinterpret_cast<PFNGLRENDERBUFFERSTORAGEPROC>(graphics->glContext->getProcAddress("glRenderbufferStorage")))(
+        GL_RENDERBUFFER, GL_RGBA8,
+        graphics->eyeRects[0].width(),
+        graphics->eyeRects[0].height()
+    );
+    (reinterpret_cast<PFNGLBINDRENDERBUFFERPROC>(graphics->glContext->getProcAddress("glBindRenderbuffer")))(
+        GL_RENDERBUFFER, 0
+    );
+    (reinterpret_cast<PFNGLFRAMEBUFFERRENDERBUFFERPROC>(graphics->glContext->getProcAddress("glFramebufferRenderbuffer")))(
+        GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_RENDERBUFFER, renderbuffer
+    );
+
 
 	frameTimer = new QElapsedTimer;
 
@@ -116,49 +136,29 @@ void OpenXRFrame::startFrame() {
 void OpenXRFrame::renderFrame() {
 //    qDebug() << "Rendering frame";
 
-    (reinterpret_cast<PFNGLBINDFRAMEBUFFEREXTPROC>(graphics->glContext->getProcAddress("glBindFramebufferEXT")))(
-        GL_FRAMEBUFFER_EXT, graphics->glFBO->handle()
-    );
-
-    //    glClearColor(0, 1, 1, 1);
-    //    glClear(GL_COLOR_BUFFER_BIT);
-
-
-//    (reinterpret_cast<PFNGLCLIPCONTROLPROC>(graphics->glContext->getProcAddress("glClipControl")))(
-//        GL_UPPER_LEFT, GL_ZERO_TO_ONE
-//    );
-
-
-    glViewport(0, 0, graphics->eyeRects[0].width(), graphics->eyeRects[0].height());
-    (reinterpret_cast<PFNGLFRAMEBUFFERTEXTURE2DEXTPROC>(graphics->glContext->getProcAddress("glFramebufferTexture2DEXT")))(
-        GL_FRAMEBUFFER_EXT,
-        GL_COLOR_ATTACHMENT0_EXT,
-        GL_TEXTURE_2D,
-        graphics->swapchainImages[0][0].image,
-        0
-    );
-
-    glFlush();
-
     graphics->quickRenderer->polishItems();
     graphics->quickRenderer->sync();
     graphics->quickRenderer->render();
 
-    glViewport(graphics->eyeRects[0].width(), 0, graphics->eyeRects[1].width(), graphics->eyeRects[1].height());
-    (reinterpret_cast<PFNGLFRAMEBUFFERTEXTURE2DEXTPROC>(graphics->glContext->getProcAddress("glFramebufferTexture2DEXT")))(
-        GL_FRAMEBUFFER_EXT,
-        GL_COLOR_ATTACHMENT1_EXT,
-        GL_TEXTURE_2D,
-        graphics->swapchainImages[1][0].image,
-        0
+    (reinterpret_cast<PFNGLCOPYIMAGESUBDATAPROC>(graphics->glContext->getProcAddress("glCopyImageSubData")))(
+        renderbuffer, GL_RENDERBUFFER, 0,
+        0, 0, 0,
+        graphics->openglImages[0][0], GL_TEXTURE_2D, 0,
+        0, 0, 0,
+        graphics->eyeRects[0].width(), graphics->eyeRects[0].height(), 1
+    );
+    (reinterpret_cast<PFNGLCOPYIMAGESUBDATAPROC>(graphics->glContext->getProcAddress("glCopyImageSubData")))(
+        renderbuffer, GL_RENDERBUFFER, 0,
+        graphics->eyeRects[1].width(), 0, 0,
+        graphics->openglImages[1][0], GL_TEXTURE_2D, 0,
+        0, 0, 0,
+        graphics->eyeRects[1].width(), graphics->eyeRects[1].height(), 1
     );
 
-    glFlush();
-
-    bool fboValid = graphics->glFBO->isValid();
-    QImage debugImage = graphics->glFBO->toImage();
-    debugImage.save(QLatin1String("/tmp/quick3d-openxr_preview.png"), nullptr, 10);
- }
+//    bool fboValid = graphics->glFBO->isValid();
+//    QImage debugImage = graphics->glFBO->toImage();
+//    debugImage.save(QLatin1String("/tmp/quick3d-openxr_preview.png"), nullptr, 10);
+}
 
 void OpenXRFrame::endFrame() {
 //    qDebug() << "Ending frame";

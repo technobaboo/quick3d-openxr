@@ -13,7 +13,15 @@ int main(int argc, char *argv[]) {
         qDebug() << "QML errors:" << sceneComponent->errors() << endl;
     }
 
-    QOpenXRApplication *xrApp = new QOpenXRApplication(mainQmlEngine, sceneComponent);
+//    QOpenXRApplication *xrApp = new QOpenXRApplication(mainQmlEngine, sceneComponent);
+
+    //Add QML access to this instance
+    qmlRegisterSingletonType<QOpenXRApplication *>("QtQuick3D", 1, 0, "OpenXR", [mainQmlEngine, sceneComponent](QQmlEngine *engine, QJSEngine *scriptEngine) -> QObject * {
+        Q_UNUSED(engine)
+        Q_UNUSED(scriptEngine)
+
+        return new QOpenXRApplication(mainQmlEngine, sceneComponent);
+    });
 
     return a.exec();
 }

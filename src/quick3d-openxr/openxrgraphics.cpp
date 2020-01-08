@@ -20,7 +20,8 @@ void OpenXRGraphics::setupQtRendering() {
     glFormat = new QSurfaceFormat;
     glFormat->setProfile(QSurfaceFormat::CoreProfile);
     glFormat->setRenderableType(QSurfaceFormat::OpenGL);
-    glFormat->setMajorVersion(3);
+    glFormat->setMajorVersion(4);
+    glFormat->setMinorVersion(3);
 
     //Create the OpenGL view rendering
     glContext = new QOpenGLContext(this);

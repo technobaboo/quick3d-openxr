@@ -3,6 +3,7 @@
 
 #include <QtQuick3D/private/qquick3dnode_p.h>
 #include <QtQuick3D/private/qquick3dsceneenvironment_p.h>
+#include <QtQuick3D/private/qquick3dviewport_p.h>
 
 #include "quick3d-openxr_meta.h"
 
@@ -15,6 +16,9 @@ public:
     QOpenXRApplication(QQmlEngine *mainQmlEngine, QQmlComponent *sceneComponent);
     virtual ~QOpenXRApplication();
 
+    static QOpenXRApplication *mainApp;
+
+    Q_INVOKABLE void setEnvironment(QQuick3DSceneEnvironment *environment);
 //    void setSceneRoot(QQuick3DObject *root);
 
 protected:
@@ -25,6 +29,9 @@ protected:
 //    QQmlEngine *mainQmlEngine;
     QObject *sceneObject;
     QQuickItem *rootItem;
+
+    QQuick3DViewport *leftView;
+    QQuick3DViewport *rightView;
 
     QQuick3DNode *sceneRoot;
     QQuick3DSceneEnvironment *environment;

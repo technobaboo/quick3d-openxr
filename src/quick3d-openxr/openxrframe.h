@@ -39,7 +39,7 @@ private:
     void createTextureFromFD(int d);
 
     //OpenGL variables
-    GLuint copyFBO;
+    GLuint renderbuffer;
     GLuint colorTex;
 
     //OpenXR declarations

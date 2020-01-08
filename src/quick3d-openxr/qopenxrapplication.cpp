@@ -4,7 +4,6 @@
 #include "qopenxrapplication.h"
 
 #include <QtQuick3D/private/qquick3dfrustumcamera_p.h>
-#include <QtQuick3D/private/qquick3dviewport_p.h>
 
 #include <QDebug>
 
@@ -40,8 +39,8 @@ QOpenXRApplication::QOpenXRApplication(QQmlEngine *mainQmlEngine, QQmlComponent 
     graphics->getViewSizes();
 
     //Set up the window
-    QQuick3DViewport *leftView  = new QQuick3DViewport(graphics->window->contentItem());
-    QQuick3DViewport *rightView = new QQuick3DViewport(graphics->window->contentItem());
+    leftView  = new QQuick3DViewport(graphics->window->contentItem());
+    rightView = new QQuick3DViewport(graphics->window->contentItem());
 
     //Align and size the viewports
     leftView ->setSize(graphics->leftViewSize );
@@ -75,19 +74,17 @@ QOpenXRApplication::QOpenXRApplication(QQmlEngine *mainQmlEngine, QQmlComponent 
     //Link the cameras to the graphics
     graphics->cameras = {leftCamera, rightCamera};
 
-    //Add QML access to this instance
-//    qmlRegisterSingletonType<QOpenXRApplication *>("QtQuick3D", 1, 0, "OpenXR", [this](QQmlEngine *engine, QJSEngine *scriptEngine) -> QObject * {
-//        Q_UNUSED(engine)
-//        Q_UNUSED(scriptEngine)
-
-//        return this;
-//    });
-
     graphics->initialize();
 }
 
 QOpenXRApplication::~QOpenXRApplication() {
 
+}
+
+void QOpenXRApplication::setEnvironment(QQuick3DSceneEnvironment *environment) {
+    leftView ->setEnvironment(environment);
+    rightView->setEnvironment(environment);
+    this->environment = environment;
 }
 
 //void QOpenXRApplication::setSceneRoot(QQuick3DObject root) {
