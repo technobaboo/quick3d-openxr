@@ -3,7 +3,7 @@
         <file>BlueGear.mesh</file>
         <file>GreenGear.mesh</file>
         <file>RedGear.mesh</file>
-        <file>rooftop_night_4k.hdr</file>
         <file>xrgears.qml</file>
+        <file>GearMaterial.qml</file>
     </qresource>
 </RCC>
