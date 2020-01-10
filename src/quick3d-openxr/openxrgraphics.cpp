@@ -70,6 +70,9 @@ void OpenXRGraphics::initialize() {
     //Make the context current
     bool isCurrent = glContext->makeCurrent(surface);
 
+    //Set the window bounds to the minimum to fit both views in case they are asymmetrical
+    window->setGeometry(QRect(QPoint(0,0),totalSize));
+
     //Create and link the FBO
     glFBO = new QOpenGLFramebufferObject(totalSize, QOpenGLFramebufferObject::NoAttachment, GL_TEXTURE_2D, GL_RGBA8);
     window->setRenderTarget(glFBO);
@@ -109,9 +112,6 @@ void OpenXRGraphics::initialize() {
 
     //Initialize views vector
     views = std::vector<XrView>(2, XrView {XR_TYPE_VIEW, nullptr});
-
-    //Finish setup of the Qt graphics
-    window->setGeometry(QRect(QPoint(0,0),totalSize)); //Set the window bounds to the minimum to fit both views in case they are asymmetrical
 
     //Make the QML engine and components and so on
     if (!qmlEngine->incubationController())

@@ -28,8 +28,8 @@ void OpenXRFrame::initialize() {
     );
     (reinterpret_cast<PFNGLRENDERBUFFERSTORAGEPROC>(graphics->glContext->getProcAddress("glRenderbufferStorage")))(
         GL_RENDERBUFFER, GL_RGBA8,
-        graphics->eyeRects[0].width(),
-        graphics->eyeRects[0].height()
+        graphics->totalSize.width(),
+        graphics->totalSize.height()
     );
     (reinterpret_cast<PFNGLBINDRENDERBUFFERPROC>(graphics->glContext->getProcAddress("glBindRenderbuffer")))(
         GL_RENDERBUFFER, 0
@@ -44,15 +44,19 @@ void OpenXRFrame::initialize() {
     emit graphics->openxr->ready();
 
     for(;;) {
+//        frameTimer->start();
+
         startFrame();
         renderFrame();
         endFrame();
+
+//        fps = 1000/frameTimer->elapsed();
+//        qDebug() << "FPS: " << fps << endl;
     }
 }
 
 void OpenXRFrame::startFrame() {
 //    qDebug() << "Starting frame";
-	frameTimer->start();
 
     //Wait for next frame
     xrWaitFrame(*graphics->openxr->stardustSession, &graphics->frameWaitInfo, &graphics->frameState);
@@ -105,11 +109,12 @@ void OpenXRFrame::startFrame() {
         camera->setRotation(QVector3D(
             euler.x(),
             euler.y(),
-            euler.z()
+            euler.z()+180
         ));
 
 //        eye->setIsFieldOfViewHorizontal(true);
 //        eye->setFieldOfView((view.fov.angleRight-view.fov.angleLeft)*RAD2DEG);
+        camera->setClipNear(0.001);
 
         camera->setTop      (std::sin(view.fov.angleUp)*camera->clipNear());
         camera->setBottom   (std::sin(view.fov.angleDown)*camera->clipNear());
@@ -136,6 +141,7 @@ void OpenXRFrame::startFrame() {
 void OpenXRFrame::renderFrame() {
 //    qDebug() << "Rendering frame";
 
+    QCoreApplication::processEvents();
     graphics->quickRenderer->polishItems();
     graphics->quickRenderer->sync();
     graphics->quickRenderer->render();
@@ -154,6 +160,7 @@ void OpenXRFrame::renderFrame() {
         0, 0, 0,
         graphics->eyeRects[1].width(), graphics->eyeRects[1].height(), 1
     );
+    glFlush();
 
 //    bool fboValid = graphics->glFBO->isValid();
 //    QImage debugImage = graphics->glFBO->toImage();
@@ -192,7 +199,4 @@ void OpenXRFrame::endFrame() {
 
     //End the drawing of the current frame
     xrEndFrame(*graphics->openxr->stardustSession, &endInfo);
-
-	fps = 1000/frameTimer->elapsed();
-//    qDebug() << "FPS: " << fps << endl;
 }

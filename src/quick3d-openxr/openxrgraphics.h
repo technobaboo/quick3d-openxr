@@ -95,8 +95,6 @@ public:
         }
     };
 
-    QOpenGLFramebufferObject *fbo;
-
     QThread *frameThread = nullptr;
     OpenXRFrame *frame = nullptr;
 

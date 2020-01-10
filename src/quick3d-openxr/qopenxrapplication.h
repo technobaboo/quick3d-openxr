@@ -14,9 +14,10 @@ class QQuickItem;
 class QUICK3DOPENXR_EXPORT QOpenXRApplication : public QObject {
     Q_OBJECT
 public:
-    QOpenXRApplication(QQmlEngine *mainQmlEngine, QQmlComponent *sceneComponent);
+    QOpenXRApplication(QObject *parent = nullptr);
     virtual ~QOpenXRApplication();
 
+    void initialize(QQmlEngine *mainQmlEngine, QQmlComponent *sceneComponent);
     Q_INVOKABLE void setEnvironment(QQuick3DSceneEnvironment *environment);
 //    void setSceneRoot(QQuick3DObject *root);
 

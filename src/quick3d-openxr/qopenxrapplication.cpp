@@ -7,11 +7,16 @@
 
 #include <QDebug>
 
-QOpenXRApplication::QOpenXRApplication(QQmlEngine *mainQmlEngine, QQmlComponent *sceneComponent) : QObject(nullptr) {
-    qDebug() << "Creating new OpenXR session" << endl;
+QOpenXRApplication::QOpenXRApplication(QObject *parent) : QObject(parent) {
 
-    //Add QML access to this instance
-    qmlRegisterSingletonInstance<QOpenXRApplication>("QtQuick3D", 1, 0, "OpenXR", this);
+}
+
+QOpenXRApplication::~QOpenXRApplication() {
+
+}
+
+void QOpenXRApplication::initialize(QQmlEngine *mainQmlEngine, QQmlComponent *sceneComponent) {
+    qDebug() << "Creating new OpenXR session" << endl;
 
     //Create all OpenXR object classes
     opengl = new OpenGL();
@@ -46,10 +51,6 @@ QOpenXRApplication::QOpenXRApplication(QQmlEngine *mainQmlEngine, QQmlComponent 
     rightView->setSize(graphics->rightViewSize);
     rightView->setPosition(QPoint(graphics->leftViewSize.width(), 0));
 
-    //Set the rendering modes for the viewports
-    leftView ->setRenderMode(QQuick3DViewport::RenderMode::Inline);
-    rightView->setRenderMode(QQuick3DViewport::RenderMode::Inline);
-
     //Create the base node for the entire QtQuick3D scenegraph and add the QML component contents in
     sceneRoot = new QQuick3DNode();
     sceneRoot->setParent(graphics->window->contentItem());
@@ -74,17 +75,14 @@ QOpenXRApplication::QOpenXRApplication(QQmlEngine *mainQmlEngine, QQmlComponent 
     //Create QML component for the scene and instantiate an instance
     sceneObject = sceneComponent->create();
     QQuick3DObject *scene3DObject = qobject_cast<QQuick3DObject *>(sceneObject);
-    if(scene3DObject != nullptr)
-        scene3DObject->setParentItem(sceneRoot);
+    scene3DObject->setParentItem(sceneRoot);
+    scene3DObject->setParent(sceneRoot);
 
     graphics->initialize();
 }
 
-QOpenXRApplication::~QOpenXRApplication() {
-
-}
-
 void QOpenXRApplication::setEnvironment(QQuick3DSceneEnvironment *environment) {
+    qDebug() << "Set Environment Map" << endl;
     leftView ->setEnvironment(environment);
     rightView->setEnvironment(environment);
     this->environment = environment;
