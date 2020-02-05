@@ -3,6 +3,8 @@
 OpenXRRenderThread::OpenXRRenderThread(QQuick3DNode *sceneRoot, QQmlEngine *engine) : QThread(sceneRoot) {
     mainQmlEngine = engine;
     this->sceneRoot = sceneRoot;
+
+    frameTimer = new QElapsedTimer();
 }
 
 void OpenXRRenderThread::run() {
@@ -64,4 +66,17 @@ void OpenXRRenderThread::run() {
     sceneRoot->moveToThread(QCoreApplication::instance()->thread());
     emit renderReady();
     frame->initialize();
+
+
+    for(;;) {
+        frameTimer->start();
+
+        frame->startFrame();
+        frame->renderFrame();
+        frame->endFrame();
+
+        fps = 1000/frameTimer->elapsed();
+//        qDebug() << "FPS: " << fps << endl;
+    }
+
 }

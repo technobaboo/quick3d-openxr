@@ -21,12 +21,11 @@ public:
     OpenXRGraphics *graphics = nullptr;
     void initialize();
 
-private:
     void startFrame();
-
     void renderFrame();
-
     void endFrame();
+
+private:
 
     void copyFrame(uint i);
     void initRenderControl();
@@ -41,10 +40,6 @@ private:
     //OpenXR declarations
     XrSwapchainImageAcquireInfo acquireInfo{XR_TYPE_SWAPCHAIN_IMAGE_ACQUIRE_INFO, nullptr};
     XrSwapchainImageWaitInfo waitInfo{XR_TYPE_SWAPCHAIN_IMAGE_WAIT_INFO, nullptr};
-
-    //FPS Timing
-    QElapsedTimer *frameTimer;
-    float fps = 0;
 };
 
 

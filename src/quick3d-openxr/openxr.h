@@ -46,8 +46,6 @@ public:
                 nullptr,
                 viewConfig
     };
-signals:
-    void ready();
 private:
     bool isExtensionSupported(char* extensionName, XrExtensionProperties* instanceExtensionProperties, uint32_t instanceExtensionCount);
 };

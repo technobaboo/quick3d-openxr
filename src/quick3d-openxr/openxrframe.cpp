@@ -37,22 +37,6 @@ void OpenXRFrame::initialize() {
     (reinterpret_cast<PFNGLFRAMEBUFFERRENDERBUFFERPROC>(graphics->glContext->getProcAddress("glFramebufferRenderbuffer")))(
         GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_RENDERBUFFER, renderbuffer
     );
-
-
-    frameTimer = new QElapsedTimer;
-
-    emit graphics->openxr->ready();
-
-    for(;;) {
-//        frameTimer->start();
-
-        startFrame();
-        renderFrame();
-        endFrame();
-
-//        fps = 1000/frameTimer->elapsed();
-//        qDebug() << "FPS: " << fps << endl;
-    }
 }
 
 void OpenXRFrame::startFrame() {
