@@ -21,6 +21,9 @@ public:
     Q_INVOKABLE void setEnvironment(QQuick3DSceneEnvironment *environment);
 //    void setSceneRoot(QQuick3DObject *root);
 
+signals:
+    void ready();
+
 protected slots:
     void renderReady();
 

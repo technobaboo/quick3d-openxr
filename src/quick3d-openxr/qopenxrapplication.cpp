@@ -44,6 +44,8 @@ void QOpenXRApplication::renderReady() {
     QQuick3DObject *scene3DObject = qobject_cast<QQuick3DObject *>(sceneObject);
     scene3DObject->setParentItem(sceneRoot);
     scene3DObject->setParent(sceneRoot);
+
+    emit ready();
 }
 
 //void QOpenXRApplication::setSceneRoot(QQuick3DObject root) {
