@@ -12,10 +12,6 @@ int main(int argc, char *argv[]) {
     QQmlEngine *mainQmlEngine = new QQmlEngine();
     QQmlComponent *sceneComponent = new QQmlComponent(mainQmlEngine, QUrl("qrc:/xrgears.qml"), QQmlComponent::PreferSynchronous);
 
-    if(sceneComponent->isError()) {
-        qDebug() << "QML errors:" << sceneComponent->errors() << endl;
-    }
-
     xrApp->initialize(mainQmlEngine, sceneComponent);
 
     return a.exec();

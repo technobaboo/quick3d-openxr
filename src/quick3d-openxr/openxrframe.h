@@ -19,19 +19,15 @@ public:
     explicit OpenXRFrame(QObject *parent = nullptr);
 
     OpenXRGraphics *graphics = nullptr;
-    QThread *thread = nullptr;
-
-public slots:
     void initialize();
 
-private slots:
+private:
     void startFrame();
 
     void renderFrame();
 
     void endFrame();
 
-private:
     void copyFrame(uint i);
     void initRenderControl();
 

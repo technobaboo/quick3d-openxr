@@ -95,9 +95,6 @@ public:
         }
     };
 
-    QThread *frameThread = nullptr;
-    OpenXRFrame *frame = nullptr;
-
     std::vector<XrView> views;
 
     std::vector<QQuick3DFrustumCamera *> cameras;

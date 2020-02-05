@@ -116,18 +116,4 @@ void OpenXRGraphics::initialize() {
     //Make the QML engine and components and so on
     if (!qmlEngine->incubationController())
         qmlEngine->setIncubationController(window->incubationController());
-
-    //Create OpenXRFrame object and add it to the thread
-    frame = new OpenXRFrame(nullptr);
-    frame->graphics = this;
-
-    frameThread = new QThread(this);
-    frame->thread = frameThread;
-
-    //Start up the frame thread
-    frameThread->start(QThread::TimeCriticalPriority);
-
-    //Start the frame loop as soon as the scene graph initializes
-    connect(this, &OpenXRGraphics::startFrameLoop, frame, &OpenXRFrame::initialize);
-    emit startFrameLoop();
 }

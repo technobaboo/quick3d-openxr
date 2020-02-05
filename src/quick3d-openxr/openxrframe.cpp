@@ -39,7 +39,7 @@ void OpenXRFrame::initialize() {
     );
 
 
-	frameTimer = new QElapsedTimer;
+    frameTimer = new QElapsedTimer;
 
     emit graphics->openxr->ready();
 
@@ -141,7 +141,6 @@ void OpenXRFrame::startFrame() {
 void OpenXRFrame::renderFrame() {
 //    qDebug() << "Rendering frame";
 
-    QCoreApplication::processEvents();
     graphics->quickRenderer->polishItems();
     graphics->quickRenderer->sync();
     graphics->quickRenderer->render();

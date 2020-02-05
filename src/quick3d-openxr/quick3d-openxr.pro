@@ -12,6 +12,7 @@ LIBS += -lopenxr_loader \
 DEFINES += QUICK3DOPENXR_MODULE
 
 SOURCES += \
+    openxrrenderthread.cpp \
     qopenxrapplication.cpp \
     opengl.cpp \
     openxr.cpp \
@@ -25,6 +26,7 @@ HEADERS += \
     openxr.h \
     openxrgraphics.h \
     openxrframe.h \
+    openxrrenderthread.h \
     qopenxrapplication.h \
     quick3d-openxr_global.h \
     quick3d-openxr_meta.h

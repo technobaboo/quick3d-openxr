@@ -6,7 +6,7 @@
 #include <QtQuick3D/private/qquick3dsceneenvironment_p.h>
 #include <QtQuick3D/private/qquick3dviewport_p.h>
 
-#include "quick3d-openxr_meta.h"
+#include "openxrrenderthread.h"
 
 class QQmlEngine;
 class QQuickItem;
@@ -17,24 +17,23 @@ public:
     QOpenXRApplication(QObject *parent = nullptr);
     virtual ~QOpenXRApplication();
 
-    void initialize(QQmlEngine *mainQmlEngine, QQmlComponent *sceneComponent);
+    void initialize(QQmlEngine *engine, QQmlComponent *component);
     Q_INVOKABLE void setEnvironment(QQuick3DSceneEnvironment *environment);
 //    void setSceneRoot(QQuick3DObject *root);
 
-protected:
-    OpenXR *openxr;
-    OpenGL *opengl;
-    OpenXRGraphics *graphics;
+protected slots:
+    void renderReady();
 
-//    QQmlEngine *mainQmlEngine;
+protected:
     QObject *sceneObject;
     QQuickItem *rootItem;
 
-    QQuick3DViewport *leftView;
-    QQuick3DViewport *rightView;
+    QQmlEngine *mainQmlEngine;
+    QQmlComponent *sceneComponent;
 
     QQuick3DNode *sceneRoot;
     QQuick3DSceneEnvironment *environment;
+    OpenXRRenderThread *renderThread;
 };
 
 #endif // QOPENXRAPPLICATION_H
