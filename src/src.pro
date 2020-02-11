@@ -1,3 +1,4 @@
 TEMPLATE = subdirs
 SUBDIRS += \
-    quick3d-openxr
+    quick3d-openxr \
+    imports

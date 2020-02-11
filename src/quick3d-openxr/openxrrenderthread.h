@@ -30,6 +30,9 @@ public:
     QQuick3DViewport *leftView;
     QQuick3DViewport *rightView;
 
+    QQuick3DFrustumCamera *leftCamera;
+    QQuick3DFrustumCamera *rightCamera;
+
 signals:
     void renderReady();
     void renderFrame();

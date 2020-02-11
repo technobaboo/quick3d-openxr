@@ -50,7 +50,22 @@ void QOpenXRApplication::renderReady() {
 }
 
 void QOpenXRApplication::renderFrame() {
+    gazePosition = (renderThread->leftCamera->scenePosition() + renderThread->rightCamera->scenePosition())/2;
+    gazeDirection = (renderThread->leftCamera->forward() + renderThread->rightCamera->forward())/2;
+
+    emit gazePositionChanged();
+    emit gazeDirectionChanged();
     emit frame();
+}
+
+QVector3D QOpenXRApplication::getGazeDirection() const
+{
+    return gazeDirection;
+}
+
+QVector3D QOpenXRApplication::getGazePosition() const
+{
+    return gazePosition;
 }
 
 //void QOpenXRApplication::setSceneRoot(QQuick3DObject root) {

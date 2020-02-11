@@ -13,6 +13,8 @@ class QQuickItem;
 
 class QUICK3DOPENXR_EXPORT QOpenXRApplication : public QObject {
     Q_OBJECT
+    Q_PROPERTY(QVector3D gazePosition READ getGazePosition NOTIFY gazePositionChanged)
+    Q_PROPERTY(QVector3D gazeDirection READ getGazeDirection NOTIFY gazeDirectionChanged)
 public:
     QOpenXRApplication(QObject *parent = nullptr);
     virtual ~QOpenXRApplication();
@@ -21,9 +23,14 @@ public:
     Q_INVOKABLE void setEnvironment(QQuick3DSceneEnvironment *environment);
 //    void setSceneRoot(QQuick3DObject *root);
 
+    QVector3D getGazePosition() const;
+    QVector3D getGazeDirection() const;
+
 signals:
     void ready();
     void frame();
+    void gazePositionChanged();
+    void gazeDirectionChanged();
 
 protected slots:
     void renderReady();
@@ -39,6 +46,9 @@ protected:
     QQuick3DNode *sceneRoot;
     QQuick3DSceneEnvironment *environment;
     OpenXRRenderThread *renderThread;
+
+    QVector3D gazePosition;
+    QVector3D gazeDirection;
 };
 
 #endif // QOPENXRAPPLICATION_H

@@ -1,0 +1,4 @@
+module Quick3DOpenXR
+plugin quick3dopenxrplugin
+classname Quick3DOpenXRPlugin
+typeinfo plugins.qmltypes
