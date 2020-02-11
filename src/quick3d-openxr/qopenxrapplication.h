@@ -23,9 +23,11 @@ public:
 
 signals:
     void ready();
+    void frame();
 
 protected slots:
     void renderReady();
+    void renderFrame();
 
 protected:
     QObject *sceneObject;

@@ -32,6 +32,7 @@ public:
 
 signals:
     void renderReady();
+    void renderFrame();
 
 private:
     //FPS Timing

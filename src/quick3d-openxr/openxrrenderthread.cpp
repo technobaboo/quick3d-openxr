@@ -71,6 +71,7 @@ void OpenXRRenderThread::run() {
     for(;;) {
         frameTimer->start();
 
+        emit renderFrame();
         frame->startFrame();
         frame->renderFrame();
         frame->endFrame();

@@ -27,6 +27,7 @@ void QOpenXRApplication::initialize(QQmlEngine *engine, QQmlComponent *component
 
     renderThread = new OpenXRRenderThread(sceneRoot, mainQmlEngine);
     connect(renderThread, &OpenXRRenderThread::renderReady, this, &QOpenXRApplication::renderReady, Qt::QueuedConnection);
+    connect(renderThread, &OpenXRRenderThread::renderFrame, this, &QOpenXRApplication::renderFrame, Qt::QueuedConnection);
     sceneRoot->moveToThread(renderThread);
     renderThread->start(QThread::TimeCriticalPriority);
 }
@@ -46,6 +47,10 @@ void QOpenXRApplication::renderReady() {
     scene3DObject->setParent(sceneRoot);
 
     emit ready();
+}
+
+void QOpenXRApplication::renderFrame() {
+    emit frame();
 }
 
 //void QOpenXRApplication::setSceneRoot(QQuick3DObject root) {
