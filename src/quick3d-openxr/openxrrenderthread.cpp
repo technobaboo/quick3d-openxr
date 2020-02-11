@@ -45,8 +45,8 @@ void OpenXRRenderThread::run() {
     rightView->setPosition(QPoint(graphics->leftViewSize.width(), 0));
 
     //Add in the cameras for the scenegraph
-    QQuick3DFrustumCamera *leftCamera  = new QQuick3DFrustumCamera();
-    QQuick3DFrustumCamera *rightCamera = new QQuick3DFrustumCamera();
+    leftCamera  = new QQuick3DFrustumCamera();
+    rightCamera = new QQuick3DFrustumCamera();
 
     leftCamera ->setParentItem(sceneRoot);
     rightCamera->setParentItem(sceneRoot);
