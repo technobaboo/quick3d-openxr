@@ -1,11 +1,10 @@
+#include <QtQuick3D/private/qquick3dfrustumcamera_p.h>
 #include "quick3d-openxr_meta.h"
 
 #include <QVector3D>
 #include <QOpenGLContext>
 #include <QOpenGLFramebufferObject>
 #include <QQuickRenderControl>
-
-#include <QtQuick3D/private/qquick3dfrustumcamera_p.h>
 
 #include <QDebug>
 
@@ -72,6 +71,7 @@ void OpenXRFrame::startFrame() {
         XrView &view = graphics->views[i];
 
         QQuick3DFrustumCamera *camera = graphics->cameras[i];
+        QQuick3DNode *cameraNode = graphics->cameras[i];
 
         //Set the cameras' positon to the pose position
         QVector3D position = QVector3D(
@@ -79,7 +79,7 @@ void OpenXRFrame::startFrame() {
             -view.pose.position.y,
             view.pose.position.z
         );
-        camera->setPosition(position);
+        cameraNode->setPosition(position);
 
         //Set the cameras' orientation to match the orientation
         QQuaternion rotation = QQuaternion(
@@ -90,15 +90,15 @@ void OpenXRFrame::startFrame() {
         );
         QVector3D euler = rotation.toEulerAngles();
 
-        camera->setRotation(QVector3D(
-            euler.x(),
-            euler.y(),
+        camera->setEulerRotation(QVector3D(
+            -euler.x(),
+            -euler.y()+180,
             euler.z()+180
         ));
 
 //        eye->setIsFieldOfViewHorizontal(true);
 //        eye->setFieldOfView((view.fov.angleRight-view.fov.angleLeft)*RAD2DEG);
-        camera->setClipNear(0.001);
+        camera->setClipNear(0.001f);
 
         camera->setTop      (std::sin(view.fov.angleUp)*camera->clipNear());
         camera->setBottom   (std::sin(view.fov.angleDown)*camera->clipNear());

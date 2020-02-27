@@ -1,5 +1,5 @@
 import QtQuick 2.0
-import QtQuick3D 1.14
+import QtQuick3D 1.15
 
 DefaultMaterial {
     diffuseLightWrap: 2
