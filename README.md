@@ -3,7 +3,7 @@
 
 This is a module, made using Qt 5.14.0, that speeds up the creation of OpenXR applications for Qt Quick 3D.
 
-##Installation
+## Installation
 1. Install Monado (https://gitlab.freedesktop.org/monado/monado) and ensure xrgears runs
 2. Install Qt 5.14.1 base, QML, Quick and Quick 3D via package manager, Qt's website (https://www.qt.io/download), or compile it yourself (https://github.com/qt)
 3. Build Quick3D-OpenXR using the provided scripts (make sure qmake is in your PATH):
