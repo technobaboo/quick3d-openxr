@@ -1,7 +1,7 @@
-import QtQuick 2.15
-import QtQuick3D 1.15
-import QtQuick3D.Materials 1.15
-import QtQuick3D.Helpers 1.15
+import QtQuick 2.14
+import QtQuick3D 1.14
+import QtQuick3D.Materials 1.14
+import QtQuick3D.Helpers 1.14
 import QtQuick3D.OpenXR 1.0
 
 Node {
@@ -12,8 +12,7 @@ Node {
         backgroundMode: SceneEnvironment.Color
         clearColor: "#444"
 
-        antialiasingMode: SceneEnvironment.MSAA
-        antialiasingQuality: SceneEnvironment.Medium
+        multisampleAAMode: SceneEnvironment.X4
 
         Component.onCompleted: OpenXR.setEnvironment(skybox)
     }
@@ -21,7 +20,7 @@ Node {
     Node {
         id:gears
         position: Qt.vector3d(-0.5, 1.15, 7)
-        eulerRotation: Qt.vector3d(-90, 0, 0)
+        rotation: Qt.vector3d(-90, 0, 0)
         scale: Qt.vector3d(0.5, 0.5, 0.5)
 
         property real gearTurn: 0
@@ -51,7 +50,7 @@ Node {
                 diffuseColor: "#f00"
             }
 
-            eulerRotation: Qt.vector3d(0, parent.gearTurn, 0)
+            rotation: Qt.vector3d(0, parent.gearTurn, 0)
         }
 
         Model {
@@ -62,7 +61,7 @@ Node {
             }
 
             position: Qt.vector3d(3, 0, 0)
-            eulerRotation: Qt.vector3d(0, -parent.gearTurn*2, 0)
+            rotation: Qt.vector3d(0, -parent.gearTurn*2, 0)
         }
 
         Model {
@@ -73,7 +72,7 @@ Node {
             }
 
             position: Qt.vector3d(0, 0, 3)
-            eulerRotation: Qt.vector3d(0, -parent.gearTurn*2, 0)
+            rotation: Qt.vector3d(0, -parent.gearTurn*2, 0)
         }
     }
 

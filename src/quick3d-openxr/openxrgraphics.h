@@ -6,6 +6,7 @@
 #include <QRect>
 
 #include "openxr_meta.h"
+#include <QtQuick3D/private/qquick3dfrustumcamera_p.h>
 
 class OpenXR;
 class OpenXRFrame;
@@ -20,8 +21,6 @@ class QQuickRenderControl;
 class QQmlComponent;
 class QQmlEngine;
 class QOffscreenSurface;
-
-class QQuick3DFrustumCamera;
 
 class OpenXRGraphics : public QObject {
     Q_OBJECT

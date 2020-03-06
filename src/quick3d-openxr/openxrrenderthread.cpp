@@ -1,4 +1,3 @@
-#include <QtQuick3D/private/qquick3dfrustumcamera_p.h>
 #include "openxrrenderthread.h"
 
 OpenXRRenderThread::OpenXRRenderThread(QQuick3DNode *sceneRoot, QQmlEngine *engine) : QThread(sceneRoot) {

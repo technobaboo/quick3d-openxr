@@ -1,4 +1,3 @@
-#include <QtQuick3D/private/qquick3dfrustumcamera_p.h>
 #include "quick3d-openxr_meta.h"
 
 #include <QThread>
